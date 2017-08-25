@@ -1,69 +1,106 @@
 <template>
   <div class="hello">
-    <p>{{ name }}</p>
-    <p>{{ value }}</p>
-    <p>{{ count }}</p>
   </div>
 </template>
 
-<script>
-// declare type ABC = {
-//   a: string;
-//   b: string;
-//   c: number;
-//   d: Array<number>;
-// }
-
-var abc = {
-  a: 'aa',
-  b: 'bb',
-  c: 12
-}
-
-function a (cb: Function) {
-  return cb('true')
-}
-
-function b (val: number): number {
-  return val * val
-}
-
-var sth = a(b)
-
-export default {
-  data () {
-    return {
-      name: this.aa(abc),
-      value: this.bb('dfs'),
-      count: sth
-    }
-  },
-
-  methods: {
-    aa (obj: { a: string; b: string; c: number; d?: Array<number> }): string {
-      return obj.a + obj.b + obj.c + ((obj.d && obj.d.toString()) || '')
-    },
-
-    bb (value: mixed) {
-      return typeof value
-    },
-
-    cc (cb: () => string) {
-      return cb(true)
-    },
-
-    ee (): number {
-      return this.cc(function (value: number): number {
-        return value * 2
-      })
-    }
-  }
-}
-</script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-p {
-  display: block;
-}
 </style>
+
+<script>
+// @flow
+// mixed可以是任意类型
+function f1 (val: mixed): mixed {
+  return typeof val
+}
+
+console.log(f1('abc'))  // 'string'
+
+// ?string可以使string或null或undefined
+function f2 (val: ?string): string {
+  if (val) {
+    return val
+  }
+  return ''
+}
+
+console.log(f2('abc'))  // 'abc'
+console.log(f2(null))   // ''
+console.log(f2())       // ''
+// console.log(f2(1))      // Error
+
+// 函数可以有默认值，这时参数只接受string或undefined
+function f3 (val: string = 'foo') {
+  return val
+}
+
+console.log(f3(''))     // ''
+console.log(f3('abc'))  // 'abc'
+console.log(f3())       // 'foo'
+console.log(f3(undefined)) // 'foo'
+// console.log(f3(null))   // Error
+
+// 如果规定了具体值，则只能接受该值
+function f4 (val: 0 | 1) {
+  return val
+}
+
+console.log(f4(0))    // 0
+// console.log(f4(3))    // Error
+// console.log(f4('0'))  // Error
+
+// 比较mixed和any的区别
+
+// mixed可以是任意类型，可以被具体类型的变量赋值
+// var v1: mixed = 5
+// var v2: number = v1   // Error
+
+var v3: number = 4
+var v4: mixed = v3
+console.log(v4)     // 4
+var v5: string = 'v5'
+v4 = v5
+console.log(v4)     // 'v5'
+
+// any完全不做类型检测，tsc都会通过，不推荐使用
+var v6: any = 10
+var v7: string = v6   // v7应该是string型，但这种赋值也被通过了
+console.log(v7)       // 10
+v7 = '20'
+console.log(v7)       // '20'
+
+// v9被设置为any型，相当于没有
+var v8: number = 1
+var v9: any = v8
+console.log(v9)       // 1
+var v10: string = 'v10'
+v9 = v10
+console.log(v9)       // 'v10'
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// declare type P = {
+//   a: string,
+//   b: number
+// }
+//
+// function f5<P> (val: P): P {
+//   return val
+// }
+//
+// console.log(f5({ a: 'a', b: 1 }))
+
+export default {
+}
+</script>
