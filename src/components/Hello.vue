@@ -1,33 +1,61 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <br>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <p>{{ name }}</p>
+    <p>{{ value }}</p>
+    <p>{{ count }}</p>
   </div>
 </template>
 
 <script>
-const str: string = '3121!'
+// declare type ABC = {
+//   a: string;
+//   b: string;
+//   c: number;
+//   d: Array<number>;
+// }
+
+var abc = {
+  a: 'aa',
+  b: 'bb',
+  c: 12
+}
+
+function a (cb: Function) {
+  return cb('true')
+}
+
+function b (val: number): number {
+  return val * val
+}
+
+var sth = a(b)
 
 export default {
-  name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App' + str
+      name: this.aa(abc),
+      value: this.bb('dfs'),
+      count: sth
+    }
+  },
+
+  methods: {
+    aa (obj: { a: string; b: string; c: number; d?: Array<number> }): string {
+      return obj.a + obj.b + obj.c + ((obj.d && obj.d.toString()) || '')
+    },
+
+    bb (value: mixed) {
+      return typeof value
+    },
+
+    cc (cb: () => string) {
+      return cb(true)
+    },
+
+    ee (): number {
+      return this.cc(function (value: number): number {
+        return value * 2
+      })
     }
   }
 }
@@ -35,21 +63,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
+p {
+  display: block;
 }
 </style>
