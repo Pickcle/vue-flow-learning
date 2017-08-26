@@ -50,32 +50,72 @@ console.log(f4(0))    // 0
 // console.log(f4('0'))  // Error
 
 // 比较mixed和any的区别
+!(function f5 () {
+  console.log('f5')
+  // mixed可以是任意类型，可以被具体类型的变量赋值
+  // var v1: mixed = 5
+  // var v2: number = v1   // Error
 
-// mixed可以是任意类型，可以被具体类型的变量赋值
-// var v1: mixed = 5
-// var v2: number = v1   // Error
+  // mixed类型的变量可以被不同类型的值赋值
+  var v3: number = 4
+  var v4: mixed = v3
+  console.log(v4)     // 4
+  var v5: string = 'v5'
+  v4 = v5
+  console.log(v4)     // 'v5'
 
-var v3: number = 4
-var v4: mixed = v3
-console.log(v4)     // 4
-var v5: string = 'v5'
-v4 = v5
-console.log(v4)     // 'v5'
+  // any完全不做类型检测，tsc都会通过，不推荐使用
+  var v6: any = 10
+  var v7: string = v6   // v7应该是string型，但这种赋值也被通过了
+  console.log(v7)       // 10
+  v7 = '20'
+  console.log(v7)       // '20'
 
-// any完全不做类型检测，tsc都会通过，不推荐使用
-var v6: any = 10
-var v7: string = v6   // v7应该是string型，但这种赋值也被通过了
-console.log(v7)       // 10
-v7 = '20'
-console.log(v7)       // '20'
+  // v9被设置为any型，相当于没有
+  var v8: number = 1
+  var v9: any = v8
+  console.log(v9)       // 1
+  var v10: string = 'v10'
+  v9 = v10
+  console.log(v9)       // 'v10'
+})()
 
-// v9被设置为any型，相当于没有
-var v8: number = 1
-var v9: any = v8
-console.log(v9)       // 1
-var v10: string = 'v10'
-v9 = v10
-console.log(v9)       // 'v10'
+//
+!(function f6 () {
+  console.log('f6')
+  var obj: any = {}
+  // obj是any型，所以v1也是any型
+  var v1 = obj.a
+  console.log(v1)   // undefined
+  // var v2 = obj.a.b  // tsc不报错，但其实会报错
+
+  var obj2: any = {
+    a: 1,
+    b: '2',
+    c: true
+  }
+
+  var v3: string = obj2.b
+  console.log(v3)   // '2'
+})()
+
+!(function f7 () {
+  console.log('f7')
+  // v1被赋值时，认为v1是个number型
+  var v1 = 4
+  var n: number = v1
+  console.log(n)
+
+  // v2的类型被改成string型后，可以赋值给s
+  var v2 = 5
+  v2 = 'sss'
+  var s: string = v2
+  console.log(s)
+})()
+
+function f8 (a: string, b?: boolean) {
+
+}
 
 //
 //
