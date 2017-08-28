@@ -113,9 +113,28 @@ console.log(f4(0))    // 0
   console.log(s)
 })()
 
-function f8 (a: string, b?: boolean) {
-
+// b参数可选
+function f8 (a: string, b?: number) {
+  if (b) {
+    return a + (b * 2)
+  }
+  return a
 }
+
+console.log(f8('a', 12))      // 'a24'
+console.log(f8('a'))          // 'a'
+// console.log(f8('a', 'b'))  // Error
+
+// 只有这样可以通过检测
+function f9 (fun: () => number) {
+  return fun()
+}
+
+function f10 (): number {
+  return 5
+}
+
+console.log(f9(f10))
 
 //
 //
