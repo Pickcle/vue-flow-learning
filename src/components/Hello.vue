@@ -136,6 +136,81 @@ function f10 (val: number): number {
 
 console.log(f9(f10, 10))
 
+!(function f11 () {
+  console.log('f11')
+  // 声明式的Sealed Object不允许添加属性
+  var v1 = {
+    a: 1,
+    b: '2',
+    c: true
+  }
+  v1.a = 2
+  v1.b = '3'
+  // v1.c = '4'   // Error
+  // v1.d = 1     // Error
+  console.log(v1.a, v1.b, v1.c)   // 2 '3' true
+
+  // Unsealed Object可以添加属性
+  // Unsealed Object的属性可以被别的类型赋值
+  var v2 = {}
+  v2.a = '1'
+  v2.b = '2'
+
+  // v2.a被赋值为number型，此时可以正常赋值给number型的a
+  v2.a = 1
+  var a: number = v2.a
+  console.log(a)
+
+  // v2.a被赋值为string型，此时可以正常赋值给string型的a
+  v2.a = '3'
+  var aa: string = v2.a
+  console.log(aa)
+
+  // 实参可以比形参多几个额外参数
+  function func (obj: { v: number }): number {
+    return obj.v * 2
+  }
+
+  console.log(func({ v: 2 }))        // 4
+  console.log(func({ v: 2, w: 2 }))  // 4
+  // console.log('func:', func({ w: 2 }))        // Error
+
+  var obj: {
+    a: number,
+    b: string
+  } = {
+    a: 1,
+    b: '2',
+    c: true
+  }
+  console.log(JSON.stringify(obj))
+
+  // object声明类型前后加了|后，就不允许额外的属性了
+  // var obj1: {| a: number |} = { a: 1, b: 2 }    // Error
+})()
+
+!(function f12 () {
+  console.log('f12')
+
+  var obj: { [string]: number } = {}
+  obj['a'] = 1
+  obj['b'] = 2
+
+  var a: number = obj['a']
+  console.log(a)
+
+  obj.c = 3
+  var c: number = obj.c
+  console.log(c)
+
+  var obj2: { [number]: string } = {}
+  obj2[1] = '1'
+  obj2[2] = '2'
+
+  console.log(obj2[1])        // '1'
+  // console.log(obj2[3].length) // throw error at runtime
+})()
+
 //
 //
 //
