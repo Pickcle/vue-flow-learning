@@ -125,16 +125,16 @@ console.log(f8('a', 12))      // 'a24'
 console.log(f8('a'))          // 'a'
 // console.log(f8('a', 'b'))  // Error
 
-// 只有这样可以通过检测
-function f9 (fun: () => number) {
-  return fun()
+// f10的参数参数类型和返回类型都必须和f9的第一个函数参数保持一致
+function f9 (fun: (v: number) => number, val: number): number {
+  return fun(val)
 }
 
-function f10 (): number {
-  return 5
+function f10 (val: number): number {
+  return val * 5
 }
 
-console.log(f9(f10))
+console.log(f9(f10, 10))
 
 //
 //
