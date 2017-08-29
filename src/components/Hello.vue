@@ -9,49 +9,50 @@
 
 <script>
 // @flow
-// mixed可以是任意类型
-function f1 (val: mixed): mixed {
-  return typeof val
-}
+!(function () {
+  // mixed可以是任意类型
+  function f1 (val: mixed): mixed {
+    return typeof val
+  }
 
-console.log(f1('abc'))  // 'string'
+  console.log(f1('abc'))  // 'string'
 
-// ?string可以使string或null或undefined
-function f2 (val: ?string): string {
-  if (val) {
+  // ?string可以使string或null或undefined
+  function f2 (val: ?string): string {
+    if (val) {
+      return val
+    }
+    return ''
+  }
+
+  console.log(f2('abc'))  // 'abc'
+  console.log(f2(null))   // ''
+  console.log(f2())       // ''
+  // console.log(f2(1))      // Error
+
+  // 函数可以有默认值，这时参数只接受string或undefined
+  function f3 (val: string = 'foo') {
     return val
   }
-  return ''
-}
 
-console.log(f2('abc'))  // 'abc'
-console.log(f2(null))   // ''
-console.log(f2())       // ''
-// console.log(f2(1))      // Error
+  console.log(f3(''))     // ''
+  console.log(f3('abc'))  // 'abc'
+  console.log(f3())       // 'foo'
+  console.log(f3(undefined)) // 'foo'
+  // console.log(f3(null))   // Error
 
-// 函数可以有默认值，这时参数只接受string或undefined
-function f3 (val: string = 'foo') {
-  return val
-}
+  // 如果规定了具体值，则只能接受该值
+  function f4 (val: 0 | 1) {
+    return val
+  }
 
-console.log(f3(''))     // ''
-console.log(f3('abc'))  // 'abc'
-console.log(f3())       // 'foo'
-console.log(f3(undefined)) // 'foo'
-// console.log(f3(null))   // Error
-
-// 如果规定了具体值，则只能接受该值
-function f4 (val: 0 | 1) {
-  return val
-}
-
-console.log(f4(0))    // 0
-// console.log(f4(3))    // Error
-// console.log(f4('0'))  // Error
+  console.log(f4(0))    // 0
+  // console.log(f4(3))    // Error
+  // console.log(f4('0'))  // Error
+})()
 
 // 比较mixed和any的区别
-!(function f5 () {
-  console.log('f5')
+!(function () {
   // mixed可以是任意类型，可以被具体类型的变量赋值
   // var v1: mixed = 5
   // var v2: number = v1   // Error
@@ -81,8 +82,7 @@ console.log(f4(0))    // 0
 })()
 
 //
-!(function f6 () {
-  console.log('f6')
+!(function () {
   var obj: any = {}
   // obj是any型，所以v1也是any型
   var v1 = obj.a
@@ -99,8 +99,7 @@ console.log(f4(0))    // 0
   console.log(v3)   // '2'
 })()
 
-!(function f7 () {
-  console.log('f7')
+!(function () {
   // v1被赋值时，认为v1是个number型
   var v1 = 4
   var n: number = v1
@@ -113,32 +112,34 @@ console.log(f4(0))    // 0
   console.log(s)
 })()
 
-// b参数可选
-function f8 (a: string, b?: number) {
-  if (b) {
-    return a + (b * 2)
+!(function () {
+  // b参数可选
+  function f8 (a: string, b?: number) {
+    if (b) {
+      return a + (b * 2)
+    }
+    return a
   }
-  return a
-}
 
-console.log(f8('a', 12))      // 'a24'
-console.log(f8('a'))          // 'a'
-// console.log(f8('a', 'b'))  // Error
+  console.log(f8('a', 12))      // 'a24'
+  console.log(f8('a'))          // 'a'
+  // console.log(f8('a', 'b'))  // Error
 
-// f10的参数参数类型和返回类型都必须和f9的第一个函数参数保持一致
-function f9 (fun: (v: number) => number, val: number): number {
-  return fun(val)
-}
+  // f10的参数参数类型和返回类型都必须和f9的第一个函数参数保持一致
+  function f9 (fun: (v: number) => number, val: number): number {
+    return fun(val)
+  }
 
-function f10 (val: number): number {
-  return val * 5
-}
+  function f10 (val: number): number {
+    return val * 5
+  }
 
-console.log(f9(f10, 10))
+  console.log(f9(f10, 10))
+})()
 
 // Object Type
-!(function f11 () {
-  console.log('f11')
+!(function () {
+  console.log('object')
   // 声明式的Sealed Object不允许添加属性
   var v1 = {
     a: 1,
@@ -190,9 +191,7 @@ console.log(f9(f10, 10))
   // var obj1: {| a: number |} = { a: 1, b: 2 }    // Error
 })()
 
-!(function f12 () {
-  console.log('f12')
-
+!(function () {
   var obj: { [string]: number } = {}
   obj['a'] = 1
   obj['b'] = 2
@@ -213,14 +212,15 @@ console.log(f9(f10, 10))
 })()
 
 // Array Type
-!(function f13 () {
+!(function () {
   var array: Array<number> = []
   array[0] = 1
   // array[1] = '2'    // Error
 })()
 
 // Tuple Type
-!(function f14 () {
+!(function () {
+  console.log('tuple')
   var tuple: [number, string, boolean] = [1, '2', true]
   // 不确定哪种类型时，必须都声明
   var randomNumber: number | string | boolean = tuple[Math.round(Math.random() * 2)]
@@ -234,6 +234,132 @@ console.log(f9(f10, 10))
 
   // tuple不能使用Array.prototype中的方法
   // tuple.push(4)      // Error
+})()
+
+// Class Type
+!(function () {
+  console.log('class')
+  class Animal {
+    name: string;
+    age: number;
+    color: string = 'white';
+    price = 500;
+    speak (str: string): string {
+      return `name: ${this.name}, age: ${this.age}, speak: ${str}`
+    }
+  }
+
+  var cat: Animal = new Animal()
+  cat.name = 'Mimi'
+  cat.age = 2
+  console.log(cat.speak('cat'))     // name: Mimi, age: 2, speak: cat
+
+  var animals: Array<Animal> = [cat]
+  console.log(animals)
+
+  // A,B,C可以代表任意类型
+  class MyClass<A, B, C> {
+    a: A;
+    b: B;
+    c: C;
+    constructor (a: A, b: B, c: C) {
+      this.a = a
+      this.b = b
+      this.c = c
+    }
+    getA (): A|B {
+      return this.c ? this.a : this.b
+    }
+  }
+  var myclass: MyClass<number, string, boolean> = new MyClass(1, 'one', true)
+  console.log(myclass.getA())   // 1
+  var myclass2: MyClass<string, number, boolean> = new MyClass('two', 2, false)
+  console.log(myclass2.getA())   // 2
+})()
+
+// Type
+!(function () {
+  console.log('type')
+  type MyType = {
+    a: number,
+    b: string,
+    c: boolean
+  }
+  var type1: MyType = {
+    a: 10,
+    b: '20',
+    c: true
+  }
+  function checkType (param: MyType) {
+    return param.c ? param.a : param.b
+  }
+  console.log(checkType(type1))   // 10
+
+  // 设置MyType的别名
+  type AliasType = MyType
+  var type2: AliasType = {
+    a: 5,
+    b: '8',
+    c: true
+  }
+  console.log(checkType(type2))   // 5
+
+  type UnionAlias = 1 | 2 | 3
+  function checkUnion (union: UnionAlias) {
+    return union * 5
+  }
+  var unionNumber: UnionAlias = 1
+  console.log(checkUnion(unionNumber)) // 5
+})()
+
+// Interface
+!(function () {
+  interface ISpeak {
+    speak (): string
+  }
+
+  interface IWalk {
+    walk (): void
+  }
+
+  class Cat implements ISpeak, IWalk {
+    // name: 'Cat';
+    speak (): string {
+      return 'Cat'
+    }
+    walk (): void {
+      console.log('cat walk')
+    }
+  }
+
+  class Dog implements ISpeak, IWalk {
+    // name: 'Dog';
+    speak (): string {
+      return 'Dog'
+    }
+    walk (): void {
+      console.log('dog walk')
+    }
+  }
+
+  var cat: ISpeak = new Cat()
+  var dog: ISpeak = new Dog()
+  console.log(cat.speak())      // 'Cat'
+  console.log(dog.speak())      // 'Dog'
+
+  interface IPerson<A, B> {
+    +age: A;    // read-only
+    -name: B    // write-only
+  }
+
+  var mike: IPerson<number, string> = {
+    age: 25,
+    name: 'Mike'
+  }
+  // mike.age = 20               // Error read only
+  console.log(mike.age)
+  mike.name = 'Peter'
+  // console.log(mike.name)      // Error write only
 })()
 
 //
