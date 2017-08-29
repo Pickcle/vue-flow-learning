@@ -136,6 +136,7 @@ function f10 (val: number): number {
 
 console.log(f9(f10, 10))
 
+// Object Type
 !(function f11 () {
   console.log('f11')
   // 声明式的Sealed Object不允许添加属性
@@ -209,6 +210,30 @@ console.log(f9(f10, 10))
 
   console.log(obj2[1])        // '1'
   // console.log(obj2[3].length) // throw error at runtime
+})()
+
+// Array Type
+!(function f13 () {
+  var array: Array<number> = []
+  array[0] = 1
+  // array[1] = '2'    // Error
+})()
+
+// Tuple Type
+!(function f14 () {
+  var tuple: [number, string, boolean] = [1, '2', true]
+  // 不确定哪种类型时，必须都声明
+  var randomNumber: number | string | boolean = tuple[Math.round(Math.random() * 2)]
+  console.log(randomNumber)
+
+  // 不能赋值给长度不等于自身的tuple
+  // var tuple1: [number, string] = tuple    // Error
+  // var tuple2: [number, string, boolean, number] = tuple   // Error
+
+  console.log(tuple.join(':'))      // 1:2:true
+
+  // tuple不能使用Array.prototype中的方法
+  // tuple.push(4)      // Error
 })()
 
 //
