@@ -9,7 +9,7 @@
 
 <script>
 // @flow
-!(function () {
+!function () {
   // mixed可以是任意类型
   function f1 (val: mixed): mixed {
     return typeof val
@@ -49,10 +49,10 @@
   console.log(f4(0))    // 0
   // console.log(f4(3))    // Error
   // console.log(f4('0'))  // Error
-})()
+}()
 
 // 比较mixed和any的区别
-!(function () {
+!function () {
   // mixed可以是任意类型，可以被具体类型的变量赋值
   // var v1: mixed = 5
   // var v2: number = v1   // Error
@@ -79,10 +79,10 @@
   var v10: string = 'v10'
   v9 = v10
   console.log(v9)       // 'v10'
-})()
+}()
 
 //
-!(function () {
+!function () {
   var obj: any = {}
   // obj是any型，所以v1也是any型
   var v1 = obj.a
@@ -97,9 +97,9 @@
 
   var v3: string = obj2.b
   console.log(v3)   // '2'
-})()
+}()
 
-!(function () {
+!function () {
   // v1被赋值时，认为v1是个number型
   var v1 = 4
   var n: number = v1
@@ -110,9 +110,9 @@
   v2 = 'sss'
   var s: string = v2
   console.log(s)
-})()
+}()
 
-!(function () {
+!function () {
   // b参数可选
   function f8 (a: string, b?: number) {
     if (b) {
@@ -135,10 +135,10 @@
   }
 
   console.log(f9(f10, 10))
-})()
+}()
 
 // Object Type
-!(function () {
+!function () {
   console.log('object')
   // 声明式的Sealed Object不允许添加属性
   var v1 = {
@@ -189,9 +189,9 @@
 
   // object声明类型前后加了|后，就不允许额外的属性了
   // var obj1: {| a: number |} = { a: 1, b: 2 }    // Error
-})()
+}()
 
-!(function () {
+!function () {
   var obj: { [string]: number } = {}
   obj['a'] = 1
   obj['b'] = 2
@@ -209,17 +209,17 @@
 
   console.log(obj2[1])        // '1'
   // console.log(obj2[3].length) // throw error at runtime
-})()
+}()
 
 // Array Type
-!(function () {
+!function () {
   var array: Array<number> = []
   array[0] = 1
   // array[1] = '2'    // Error
-})()
+}()
 
 // Tuple Type
-!(function () {
+!function () {
   console.log('tuple')
   var tuple: [number, string, boolean] = [1, '2', true]
   // 不确定哪种类型时，必须都声明
@@ -234,10 +234,10 @@
 
   // tuple不能使用Array.prototype中的方法
   // tuple.push(4)      // Error
-})()
+}()
 
 // Class Type
-!(function () {
+!function () {
   console.log('class')
   class Animal {
     name: string;
@@ -275,10 +275,10 @@
   console.log(myclass.getA())   // 1
   var myclass2: MyClass<string, number, boolean> = new MyClass('two', 2, false)
   console.log(myclass2.getA())   // 2
-})()
+}()
 
 // Type
-!(function () {
+!function () {
   console.log('type')
   type MyType = {
     a: number,
@@ -310,10 +310,10 @@
   }
   var unionNumber: UnionAlias = 1
   console.log(checkUnion(unionNumber)) // 5
-})()
+}()
 
 // Interface
-!(function () {
+!function () {
   interface ISpeak {
     speak (): string
   }
@@ -360,7 +360,57 @@
   console.log(mike.age)
   mike.name = 'Peter'
   // console.log(mike.name)      // Error write only
-})()
+}()
+
+// default value
+!function () {
+  type Item<T: number = 1> = {
+    prop: T
+  }
+
+  var item1: Item<> = { prop: 1 }
+  var item2: Item<2> = { prop: 2 }
+  console.log(item1, item2)
+}()
+
+// Intersection Type
+!function () {
+  type A = { a: number }
+  type B = { b: number }
+
+  function f (value: A & B) {
+    return value.a + value.b
+  }
+
+  var union: A & B = { a: 1, b: 2 }
+  console.log(f(union))       // 3
+}()
+
+// typeof
+!function () {
+  class A {
+    foo () {}
+  }
+  class B {
+    foo () {}
+  }
+  // var cls1: typeof A = B     // Error
+  var cls2: typeof A = A
+
+  var ins1: A = new A()
+
+  var ins2: typeof ins1 = new A()
+}()
+
+// type cast expression
+!function () {
+  var a = (2 + 2: number)
+  console.log(a)          // 4
+  var obj = { prop: (2 * 2: number) }
+  console.log(obj)
+
+  var pro: Promise<number>
+}()
 
 //
 //
