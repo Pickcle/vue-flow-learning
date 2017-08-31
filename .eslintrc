@@ -11,6 +11,8 @@
   ],
 
   "rules": {
-    "flowtype-errors/show-errors": 2
+    "flowtype-errors/show-errors": 2,
+    "wrap-iife": 0,
+    "no-unused-vars": 0
   }
 }
