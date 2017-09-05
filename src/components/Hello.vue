@@ -408,34 +408,31 @@
   console.log(a)          // 4
   var obj = { prop: (2 * 2: number) }
   console.log(obj)
-
-  var pro: Promise<number>
 }()
 
+// Utility Type
+// !function () {
+//   type name1 = 'Nike' | 'Charles' | 'Michael'
+//   var nameEnum1 = {
+//     Nike: 1,
+//     Charles: 2,
+//     Michael: 3
+//   }
+//   function printNumber (name: name1) {
+//     console.log(nameEnum1[name])
+//   }
+//   printNumber('Nike')     // 1
 //
+//   var nameEnum2 = {
+//     Mary: 1,
+//     Judy: 2,
+//     Willian: 3
+//   }
+//   type name2 = $Keys<typeof nameEnum2>
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// declare type P = {
-//   a: string,
-//   b: number
+//   var mary: nameEnum2 = 'Mary'
+//   console.log(mary)       // mary
 // }
-//
-// function f5<P> (val: P): P {
-//   return val
-// }
-//
-// console.log(f5({ a: 'a', b: 1 }))
-
 export default {
 }
 </script>
